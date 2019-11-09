@@ -211,7 +211,8 @@ function load_preset_character_items_and_create_project()
     let selected_character = document.getElementById("character-preset-list-select").value;
 
     // DETERMINE PROJECT NAME
-    let project_name = "[" + ((selected_min_rank_value === selected_max_rank_value) ? selected_min_rank_value : (selected_min_rank_value + " - " + selected_max_rank_value)) + "] "; // PREFIX
+    let rank_suffix = "[" + ((selected_min_rank_value === selected_max_rank_value) ? selected_min_rank_value : (selected_min_rank_value + " - " + selected_max_rank_value)) + "]";
+    let project_name = "";
 
     let character_name = get_character_data(selected_character, "name");
     let character_thematic = get_character_data(selected_character, "thematic");
@@ -228,6 +229,8 @@ function load_preset_character_items_and_create_project()
 
         project_name += translated_name;
     }
+
+    project_name += " " + rank_suffix;
 
     // CHECK IF PROJECT NAME ALREADY EXISTS
     if (projects.has(project_name))
