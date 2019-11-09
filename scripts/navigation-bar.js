@@ -88,6 +88,29 @@ function open_projects()
     if (other_nav.classList.contains("is-open")) { other_nav.classList.remove("is-open"); }
 }
 
+function open_roster()
+{
+    document.getElementById("items-container").style.display = "none";
+    document.getElementById("presets-container").style.display = "none";
+    document.getElementById("projects-container").style.display = "none";
+    document.getElementById("roster-container").style.display = "block";
+    document.getElementById("settings-container").style.display = "none";
+    document.getElementById("other-container").style.display = "none";
+
+    let item_nav = document.getElementById("navigation-items");
+    if (item_nav.classList.contains("is-open")) { item_nav.classList.remove("is-open"); }
+    let presets_nav = document.getElementById("navigation-presets");
+    if (presets_nav.classList.contains("is-open")) { presets_nav.classList.remove("is-open"); }
+    let projects_nav = document.getElementById("navigation-projects");
+    if (projects_nav.classList.contains("is-open")) { projects_nav.classList.remove("is-open"); }
+    let roster_nav = document.getElementById("navigation-roster");
+    if (!roster_nav.classList.contains("is-open")) { roster_nav.classList.add("is-open"); }
+    let settings_nav = document.getElementById("navigation-settings");
+    if (settings_nav.classList.contains("is-open")) { settings_nav.classList.remove("is-open"); }
+    let other_nav = document.getElementById("navigation-other");
+    if (other_nav.classList.contains("is-open")) { other_nav.classList.remove("is-open"); }
+}
+
 function open_settings()
 {
     // INIT VARIABLES
