@@ -95,6 +95,9 @@ function save_project_data()
     // ADD PROJECT DATA TO PROJECT MAP
     projects.set(project_name, project_item_data);
 
+    // sort projects by character name
+    projects = new Map([...projects].sort((a, b) => a[0] > b[0] ? 1 : -1 ))
+
     // SAVE PROJECT MAP TO COOKIE AS COOKIE-SAFE JSON STRING
     localStorage.setItem('projects', map_of_maps_to_map_string_json(projects));
 
