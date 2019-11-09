@@ -95,8 +95,7 @@ function save_project_data()
     // ADD PROJECT DATA TO PROJECT MAP
     projects.set(project_name, project_item_data);
 
-    // sort projects by character name
-    projects = new Map([...projects].sort((a, b) => a[0] > b[0] ? 1 : -1 ))
+    projects = normalize_projects(projects)
 
     // SAVE PROJECT MAP TO COOKIE AS COOKIE-SAFE JSON STRING
     localStorage.setItem('projects', map_of_maps_to_map_string_json(projects));
@@ -127,6 +126,17 @@ function save_project_data()
         toastr.success(translated_toast);
     }
     console.log(get_colored_message("Projects", "Project ", message_status.SUCCESS) + highlight_code(project_name) + message_status.SUCCESS + " has been saved.");
+}
+
+let normalize_projects = function(projects) {
+    let old_name_regex = /^(\[.*\]) (.*)$/;
+    let projects_array = [...projects];
+    projects_array.forEach(function(item) {
+        let project_name = item[0];
+        item[0] = project_name.replace(old_name_regex, '$2 $1');
+    });
+    projects_array.sort((a, b) => a[0] > b[0] ? 1 : -1 );
+    return new Map(projects_array);
 }
 
 function load_project_data()
