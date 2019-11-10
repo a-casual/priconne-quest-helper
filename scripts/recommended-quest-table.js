@@ -6,7 +6,8 @@ let focused_item_element_id = "";
 function build_recommended_quest_table(all_recipe_maps_array)
 {
     last_compiled_all_recipe_maps_array = all_recipe_maps_array;
-    let total_recipe = get_total_recipe(all_recipe_maps_array);
+    let total_recipe_with_disabled = get_total_recipe(all_recipe_maps_array);
+    let total_recipe = new Map(total_recipe_with_disabled);
     let quest_table = document.getElementById("recommended-quest-table");
     let quests = quest_map;
 
@@ -346,17 +347,16 @@ function build_recommended_quest_table(all_recipe_maps_array)
 
                 function write_item_image_html(item_name, item_drop_percent, is_item_4)
                 {
-                    let item_amount = total_recipe.get(item_name);
-                    let is_not_included_in_disabled = !disabled_items.includes(item_name);
+                    let item_amount = total_recipe_with_disabled.get(item_name);
 
-                    table_html += "<th class='quest-hover" + ((item_amount > 0 && is_not_included_in_disabled) ? "" : " quest-is-empty-text") + "' height='48'>";
+                    table_html += "<th class='quest-hover' height='48'>";
                     table_html += "<img class=\"quest-item-image"
-                        + (total_recipe.has(item_name) ? "" : " grayscale")
+                        + (total_recipe.has(item_name) ? "" : " low-opacity")
                         + (is_item_a_priority_and_needed(item_name) && total_recipe.has(item_name) ? " priority-quest-item" : "")
                         + ((is_item_4) ? " item-4-element" : "")
                         + "\" title=\"" + item_name
                         + "\" src=\"" + get_item_image_path(item_name.split(' ').join('_')) + "\" alt=\"\"" + (is_item_4 ? " hidden" : "")  + ">";
-                    if (item_amount > 0 && is_not_included_in_disabled)
+                    if (item_amount > 0)
                     {
                         if (quest_display === quest_display_settings.AMOUNT)
                         {
@@ -436,15 +436,14 @@ function build_recommended_quest_table(all_recipe_maps_array)
                 // SUB-ITEM IMAGES
                 for (let i = 0 ; i < subdrops.length ; i++)
                 {
-                    let item_amount = total_recipe.get(subdrops[i]);
-                    let is_not_included_in_disabled = !disabled_items.includes(subdrops[i]);
-                    table_html += "<th class='quest-hover" + ((item_amount > 0 && is_not_included_in_disabled) ? "" : " quest-is-empty-text") + "' height='48'>";
+                    let item_amount = total_recipe_with_disabled.get(subdrops[i]);
+                    table_html += "<th class='quest-hover' height='48'>";
                     table_html += "<img class=\"quest-item-image"
-                            + (total_recipe.has(subdrops[i]) ? "" : " grayscale")
+                            + (total_recipe.has(subdrops[i]) ? "" : " low-opacity")
                             + (is_item_a_priority_and_needed(subdrops[i]) && total_recipe.has(subdrops[i]) ? " priority-quest-item" : "")
                         + "\" title=\"" + ((subdrops[i] !== "") ? subdrops[i] : "???")
                         + "\" src=\"" + get_item_image_path(((subdrops[i] !== "") ? subdrops[i].split(' ').join('_') : "Placeholder")) + "\" alt=\"\">";
-                    if (item_amount > 0 && is_not_included_in_disabled)
+                    if (item_amount > 0)
                     {
                         if (quest_display === quest_display_settings.AMOUNT)
                         {
