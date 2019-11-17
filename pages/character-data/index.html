@@ -138,7 +138,7 @@
                 }
                 else
                 {
-                    file_name = ((character_thematic === "") ? character_name : character_thematic.split(' ').join('_') + "_" + character_name);
+                    file_name = character_id;
                 }
                 table_html += "<th height='48' width='48'><img class=\"quest-item-image\" title=\"" + character_thematic + " " + character_name + "\" src=\"../../" + get_unit_icon_image_path(file_name) + "\" alt=\"\"></th>";
 
