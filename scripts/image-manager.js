@@ -80,7 +80,7 @@ function get_unit_icon_image_path(file_name)
 {
     if (file_name === "")
     {
-        file_name = "Placeholder";
+        file_name = "placeholder";
     }
 
     if (webp_enabled)

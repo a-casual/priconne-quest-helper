@@ -23,11 +23,11 @@ function build_character_preset_list()
         }
         else
         {
-            let name = character_data_map.get("name").toLowerCase();
+            let name_tl_id = character_id.split('_').pop();
             let thematic = character_data_map.get("thematic").replace(" ", "_").toLowerCase();
 
             let character_en = character_data_map.get("name") + ((character_data_map.get("thematic") !== "") ?  (" (" + character_data_map.get("thematic") + ")") : "");
-            let character_translated = language_json["character_names"][name] + ((character_data_map.get("thematic") !== "") ? " (" + language_json["thematics"][thematic] + ")" : "");
+            let character_translated = language_json["character_names"][name_tl_id] + ((character_data_map.get("thematic") !== "") ? " (" + language_json["thematics"][thematic] + ")" : "");
 
             // USE （）IF JP
             if (current_language === "ja")
@@ -48,7 +48,7 @@ function update_selected_character_preset_details()
 
     if (selected_character === "default_character")
     {
-        document.getElementById("preset-character-image").src = get_unit_icon_image_path("Placeholder");
+        document.getElementById("preset-character-image").src = get_unit_icon_image_path("placeholder");
         document.getElementById("preset-character-name-label").innerHTML = "";
         document.getElementById("preset-character-load-button").disabled = true;
         document.getElementById("preset-character-load-and-create-project-button").disabled = true;
@@ -61,7 +61,7 @@ function update_selected_character_preset_details()
         {
             let character_name = get_character_data(selected_character, "name");
             let character_thematic = get_character_data(selected_character, "thematic");
-            let character_image_name = (character_thematic === "") ? character_name : character_thematic + "_" + character_name;
+            let character_image_name = selected_character;
             let character_thematic_tl;
             let character_tl;
 
@@ -72,7 +72,7 @@ function update_selected_character_preset_details()
             }
             else
             {
-                let tl_name = character_name.toLowerCase();
+                let tl_name = selected_character.split('_').pop();
                 let tl_thematic = character_thematic.replace(" ", "_").toLowerCase();
 
                 character_thematic_tl = language_json["thematics"][tl_thematic];
@@ -86,7 +86,7 @@ function update_selected_character_preset_details()
             }
 
 
-            document.getElementById("preset-character-image").src = get_unit_icon_image_path(character_image_name.split(' ').join('_'));
+            document.getElementById("preset-character-image").src = get_unit_icon_image_path(character_image_name);
             if (current_language === "en")
             {
                 document.getElementById("preset-character-name-label").innerHTML = ((character_thematic === "") ? character_name : character_name + " (" + character_thematic + ")") + "<br>" + character_tl;
@@ -222,10 +222,10 @@ function load_preset_character_items_and_create_project()
     }
     else
     {
-        character_name = character_name.toLowerCase();
+        let character_tl_id = selected_character.split('_').pop();
         character_thematic = character_thematic.replace(" ", "_").toLowerCase();
 
-        let translated_name = language_json["character_names"][character_name] + ((character_thematic !== "") ? " (" + language_json["thematics"][character_thematic] + ")" : "");
+        let translated_name = language_json["character_names"][character_tl_id] + ((character_thematic !== "") ? " (" + language_json["thematics"][character_thematic] + ")" : "");
 
         project_name += translated_name;
     }
