@@ -375,6 +375,7 @@ img.quest-character-shard-grayscale {
 
 .quest-hover {
     padding-bottom: 0;
+    position: relative;
 }
 
 .quest-req-amount-text {
@@ -400,11 +401,51 @@ img.quest-character-shard-grayscale {
      border-radius: 5px;
  }
 
-.quest-display-top {
+.quest-inv-amount-text {
+     text-shadow: 1px 1px 4px #000000,
+     1px 1px 4px #000000,
+     1px 1px 4px #000000,
+     1px 1px 4px #000000;
+
+     position: absolute;
+     top: 9px;
+     left: 4px;
+
+     color: white;
+     font-family: "Calibri", Arial, serif;
+
+     border-radius: 5px;
+}
+
+.quest-hover.p1 img {
     opacity: 1;
 }
 
-.quest-display-bottom {
+.quest-hover.p1 .quest-display-top,
+.quest-hover.p1:hover .quest-display-bottom {
+    opacity: 1;
+}
+
+.quest-hover.p2 img {
+    filter: opacity(50%);
+}
+
+.quest-hover.p2 .quest-display-top,
+.quest-hover.p2:hover .quest-display-bottom {
+    filter: opacity(80%);
+}
+
+.quest-hover.p3 img {
+    filter: opacity(30%);
+}
+
+.quest-hover.p3 .quest-display-top,
+.quest-hover.p3:hover .quest-display-bottom {
+    filter: opacity(50%);
+}
+
+.quest-display-bottom,
+.quest-hover:hover .quest-display-top {
     opacity: 0;
 }
 
@@ -412,16 +453,26 @@ img.quest-character-shard-grayscale {
     padding-bottom: 0;
 }
 
-
-.quest-hover:hover .quest-display-top {
-    opacity: 0;
-}
-
-.quest-hover:hover .quest-display-bottom {
-    opacity: 1;
-}
-
 .quest-is-empty-text {
     position: relative;
     bottom: -2px;
+}
+
+.inventory-inline-editor {
+    position: absolute;
+    top: -3px;
+
+    display: block;
+    width: 100%;
+
+    font-size: 0.5em;
+}
+
+.inventory-inline-editor button {
+    display: inline-block;
+    width: 48%;
+    padding: 0;
+
+    font-size: 1em;
+    text-align: center;
 }

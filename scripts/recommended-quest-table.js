@@ -348,10 +348,14 @@ function build_recommended_quest_table(all_recipe_maps_array)
                 function write_item_image_html(item_name, item_drop_percent, is_item_4)
                 {
                     let item_amount = total_recipe_with_disabled.get(item_name);
+                    let inv_frag_amount = inventory_get_fragment_amount(item_name);
+                    let priority_class = "p1";
+                    if (!total_recipe.has(item_name) || inv_frag_amount >= item_amount) {
+                        priority_class = "p3";
+                    }
 
-                    table_html += "<th class='quest-hover' height='48'>";
+                    table_html += "<th class='quest-hover " + priority_class + "' height='48' data-item-name=\"" + item_name + "\">";
                     table_html += "<img class=\"quest-item-image"
-                        + (total_recipe.has(item_name) ? "" : " low-opacity")
                         + (is_item_a_priority_and_needed(item_name) && total_recipe.has(item_name) ? " priority-quest-item" : "")
                         + ((is_item_4) ? " item-4-element" : "")
                         + "\" title=\"" + item_name
@@ -360,11 +364,13 @@ function build_recommended_quest_table(all_recipe_maps_array)
                     {
                         if (quest_display === quest_display_settings.AMOUNT)
                         {
+                            table_html += "<div class=\"quest-inv-amount-text quest-display-top" + ((is_item_4) ? " item-4-element" : "") + "\">" + "\u00D7" + inv_frag_amount + "</div>";
                             table_html += "<div class=\"quest-percent-text quest-display-bottom" + ((is_item_4) ? " item-4-element" : "") + "\">" + item_drop_percent + "\u0025" + "</div>";
                             table_html += "<div class=\"quest-req-amount-text quest-display-top" + ((is_item_4) ? " item-4-element" : "") + "\">" + "\u00D7" + item_amount + "</div>";
                         }
                         else
                         {
+                            table_html += "<div class=\"quest-inv-amount-text quest-display-bottom" + ((is_item_4) ? " item-4-element" : "") + "\">" + "\u00D7" + inv_frag_amount + "</div>";
                             table_html += "<div class=\"quest-percent-text quest-display-top" + ((is_item_4) ? " item-4-element" : "") + "\">" + item_drop_percent + "\u0025" + "</div>";
                             table_html += "<div class=\"quest-req-amount-text quest-display-bottom" + ((is_item_4) ? " item-4-element" : "") + "\">" + "\u00D7" + item_amount + "</div>";
                         }
@@ -436,10 +442,17 @@ function build_recommended_quest_table(all_recipe_maps_array)
                 // SUB-ITEM IMAGES
                 for (let i = 0 ; i < subdrops.length ; i++)
                 {
+                    let item_name = subdrops[i];
                     let item_amount = total_recipe_with_disabled.get(subdrops[i]);
-                    table_html += "<th class='quest-hover' height='48'>";
+                    let inv_frag_amount = inventory_get_fragment_amount(subdrops[i]);
+
+                    let priority_class = "p1";
+                    if (!total_recipe.has(item_name) || inv_frag_amount >= item_amount) {
+                        priority_class = "p3";
+                    }
+
+                    table_html += "<th class='quest-hover " + priority_class + "' height='48' data-item-name=\"" + item_name + "\">";
                     table_html += "<img class=\"quest-item-image"
-                            + (total_recipe.has(subdrops[i]) ? "" : " low-opacity")
                             + (is_item_a_priority_and_needed(subdrops[i]) && total_recipe.has(subdrops[i]) ? " priority-quest-item" : "")
                         + "\" title=\"" + ((subdrops[i] !== "") ? subdrops[i] : "???")
                         + "\" src=\"" + get_item_image_path(((subdrops[i] !== "") ? subdrops[i].split(' ').join('_') : "Placeholder")) + "\" alt=\"\">";
@@ -447,6 +460,7 @@ function build_recommended_quest_table(all_recipe_maps_array)
                     {
                         if (quest_display === quest_display_settings.AMOUNT)
                         {
+                            table_html += "<div class=\"quest-inv-amount-text quest-display-top\">" + "\u00D7" + inv_frag_amount + "</div>";
                             if (subdrops_percent === undefined)
                             {
                                 table_html += "<div class=\"quest-percent-text quest-display-bottom\">20\u0025</div>";
@@ -459,6 +473,7 @@ function build_recommended_quest_table(all_recipe_maps_array)
                         }
                         else
                         {
+                            table_html += "<div class=\"quest-inv-amount-text quest-display-bottom\">" + "\u00D7" + inv_frag_amount + "</div>";
                             if (subdrops_percent === undefined)
                             {
                                 table_html += "<div class=\"quest-percent-text quest-display-top\">20\u0025</div>";
@@ -621,3 +636,63 @@ function focus_on_item(item_name, item_id)
     // REFRESH QUESTS
     refresh_quest_table();
 }
+
+$(function() {
+    $('#recommended-quest-table').on('click', '.quest-item-image', function() {
+        // open, close or move inline editor
+
+        let $this = $(this);
+
+        let $inventory_editor = $('#inventory-inline-editor');
+        if ($inventory_editor.length == 0) {
+            $inventory_editor = $('#inventory-inline-editor-prototype').clone().prop('id', 'inventory-inline-editor');
+        }
+
+        if ($inventory_editor.is(':visible') && $this.prev().is($inventory_editor)) {
+            $inventory_editor.hide();
+        } else {
+            $this.before($inventory_editor);
+            $inventory_editor.show();
+
+            let $current_parent = $this.parent();
+            let item_name = $current_parent.data('item-name');
+
+            let increment = equipment_map.get(item_name.replace(' Fragment', '')).get("req_pieces");
+
+            let $plus_button = $('button.plus', $inventory_editor);
+            $plus_button.text('+' + increment);
+            $plus_button[0].value = '+' + increment;
+
+            let $minus_button = $('button.minus', $inventory_editor);
+            $minus_button.text('-' + increment);
+            $minus_button[0].value = '-' + increment;
+        }
+    });
+
+    $('#recommended-quest-table').on('click', '#inventory-inline-editor button', function() {
+        // add or remove inventory items
+
+        let $this = $(this);
+
+        let $current_parent = $this.parent().parent();
+
+        let item_name = $current_parent.data('item-name');
+
+        let amount = parseInt(this.value);
+
+        let current_amount = inventory_get_fragment_amount(item_name);
+        let new_amount = inventory_set_fragment_amount(item_name, current_amount + amount);
+
+        let $affected_nodes = $('#recommended-quest-table .quest-hover[data-item-name="' + item_name + '"]');
+        $('.quest-inv-amount-text', $affected_nodes).text('\u00D7' + new_amount);
+
+        let total_recipe_amount = parseInt($current_parent.children('.quest-req-amount-text').text().substring(1));
+
+        let priority_class = "p1";
+        if (new_amount >= total_recipe_amount) {
+            priority_class = "p3";
+        }
+
+        $affected_nodes.removeClass('p1 p2 p3').addClass(priority_class);
+    });
+});
