@@ -658,6 +658,9 @@ $(function() {
             let item_name = $current_parent.data('item-name');
 
             let increment = equipment_map.get(item_name.replace(' Fragment', '')).get("req_pieces");
+            if (increment < 10) {
+                increment = 10;
+            }
 
             let $plus_button = $('button.plus', $inventory_editor);
             $plus_button.text('+' + increment);
