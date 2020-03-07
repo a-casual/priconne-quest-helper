@@ -109,8 +109,7 @@ function save_project_data()
     // SET SELECTED PROJECT TO RECENTLY SAVED PROJECT, ALSO ENABLE ADD/SUB BUTTONS AND SHOW PRIORITIZE BUTTON
     document.getElementById("saved-projects-select").value = project_name;
     disable_add_and_sub_buttons(false);
-    //disable_complete_project_button(true);
-    disable_complete_project_button(completed_projects.includes(project_name));
+    disable_complete_project_button(true);
     show_prioritize_button(true);
 
     // UPDATE PRIORITY ITEMS
@@ -448,8 +447,7 @@ function update_project_selection()
     let is_project_prioritized = priority_projects.includes(selected_project);
     show_prioritize_button(!is_project_prioritized);
 
-    //let is_project_complete = selected_project !== ALL_PROJECTS;
-    let is_project_complete = completed_projects.includes(selected_project);
+    let is_project_complete = selected_project !== ALL_PROJECTS;
     disable_complete_project_button(is_project_complete);
 
     console.log(get_colored_message("Projects", "Selected ", message_status.INFO) + highlight_code(selected_project) + message_status.INFO + "." +
@@ -513,7 +511,6 @@ function init_blacklist()
             }
             refresh_quest_table();
             update_saved_projects_select();
-            disable_complete_project_button(completed_projects.includes(document.getElementById("saved-projects-select").value));
 
             document.getElementById("blacklist-load-button").title = ((saved_blacklist_array.length > 0) ? button_title_string : "The saved blacklist is empty.");
             console.log(get_colored_message("Blacklist", "User blacklist has been loaded!", message_status.SUCCESS));
@@ -576,7 +573,6 @@ function clear_blacklist()
 
         refresh_quest_table();
         update_saved_projects_select();
-        disable_complete_project_button(false);
 
         if (current_language === language.ENGLISH)
         {
