@@ -924,15 +924,6 @@ DISABLED AS OF [1.8.1] 2/29/2020 - READ CHANGELOG
             document.getElementById("setting-saving-div").hidden = true;
             document.getElementById("local-storage-warning").hidden = false;
         }
-        else
-        {
-            // REMOVE 'inventory' DUE TO THE FEATURE BEING DISABLED:
-            // DISABLED AS OF [1.8.1] 2/29/2020 - READ CHANGELOG
-            if (localStorage.getItem("inventory") !== null) {
-                localStorage.removeItem("inventory");
-            }
-
-        }
     };
 </script>
 
