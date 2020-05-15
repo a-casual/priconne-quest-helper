@@ -7,7 +7,7 @@ const character_data_version = Object.freeze({
 });
 
 const max_character_rank_information = Object.freeze({
-    CURRENT: 16,
+    CURRENT: 17,
     LEGACY: 14,
 });
 
